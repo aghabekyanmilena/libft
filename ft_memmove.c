@@ -6,43 +6,36 @@
 /*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 18:15:54 by miaghabe          #+#    #+#             */
-/*   Updated: 2024/11/17 01:12:34 by miaghabe         ###   ########.fr       */
+/*   Updated: 2024/11/21 20:08:22 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	is_overlap(void *dest, const void *src, size_t n)
-{
-	unsigned char		*d;
-	const unsigned char	*s;
-
-	d = dest;
-	s = src;
-	if ((d >= s && d < s + n) || (s >= d && s < d + n))
-		return (1);
-	return (0);
-}
-
 void	*ft_memmove(void *dest, const void *src, size_t n)
 {
-	unsigned char		*d;
-	const unsigned char	*s;
+	size_t	i;
 
 	if (!dest && !src)
 		return (NULL);
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
-	if (d == 0 || s == 0)
+	if (!n)
 		return (dest);
-	if (is_overlap(d, s, n))
+	i = 0;
+	if (dest < src)
 	{
-		d += n;
-		s += n;
-		while (n--)
-			*(--d) = *(--s);
+		while (i < n)
+		{
+			((char *)dest)[i] = ((char *)src)[i];
+			i++;
+		}
 	}
 	else
-		ft_memcpy(d, s, n);
+	{
+		while (n > 0)
+		{
+			*((char *)dest + n - 1) = *((char *)src + n - 1);
+			n--;
+		}
+	}
 	return (dest);
 }
