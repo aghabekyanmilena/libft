@@ -3,64 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miaghabe <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: miaghabe <miaghabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/19 12:23:26 by miaghabe          #+#    #+#             */
-/*   Updated: 2024/11/19 12:45:26 by miaghabe         ###   ########.fr       */
+/*   Updated: 2025/01/18 15:22:59 by miaghabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	count_tokens(char const *str, char delimeter)
+static size_t	ft_toklen(const char *s, char c)
 {
-	size_t	tokens;
-	int		inside_token;
+	size_t	ret;
 
-	tokens = 0;
-	while (*str)
+	ret = 0;
+	while (*s)
 	{
-		inside_token = 0;
-		while (*str && *str == delimeter)
-			++str;
-		while (*str && *str != delimeter)
+		if (*s != c)
 		{
-			if (!inside_token)
-			{
-				tokens++;
-				inside_token = 1;
-			}
-			++str;
+			++ret;
+			while (*s && *s != c)
+				++s;
 		}
+		else
+			++s;
 	}
-	return (tokens);
+	return (ret);
 }
 
-char	**ft_split(char const *s, char c)
+char	**ft_split(const char *s, char c)
 {
-	const char	*new_s;
-	char		**arr;
-	int			words_amount;
-	int			i;
+	char	**ret;
+	size_t	i;
+	size_t	len;
 
 	if (!s)
-		return (NULL);
-	words_amount = count_tokens(s, c);
-	arr = (char **)malloc((words_amount + 1) * (sizeof(char *)));
-	if (!arr)
-		return (NULL);
-	i = -1;
-	while (++i < words_amount)
+		return (0);
+	i = 0;
+	ret = malloc(sizeof(char *) * (ft_toklen(s, c) + 1));
+	if (!ret)
+		return (0);
+	while (*s)
 	{
-		while (*s == c)
-			s++;
-		new_s = s;
-		while (*s && *s != c)
-			s++;
-		arr[i] = ft_substr(new_s, 0, s - new_s);
-		if (!arr[i] && ft_split(*arr, i))
-			return (NULL);
+		if (*s != c)
+		{
+			len = 0;
+			while (*s && *s != c && ++len)
+				++s;
+			ret[i++] = ft_substr(s - len, 0, len);
+		}
+		else
+			++s;
 	}
-	arr[i] = NULL;
-	return (arr);
+	ret[i] = 0;
+	return (ret);
 }
